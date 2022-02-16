@@ -45,8 +45,8 @@ const genDiff = (filepath1, filepath2) => {
         _.set(output, `+ ${key}`, data2[key]);
       }
     });
-    const ukeys = _(data2).keys().filter((key) => !unfound.includes(key));
-    ukeys.sort().forEach((key) => _.set(output, `+ ${key}`, data2[key]));
+    _(data2).keys().filter((key) => !unfound.includes(key)).sort()
+      .forEach((key) => _.set(output, `+ ${key}`, data2[key]));
     return output;
   } catch (e) {
     return {};

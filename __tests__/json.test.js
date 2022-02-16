@@ -12,16 +12,17 @@ describe('test gendiff', () => {
     '+ timeout': 20,
     '+ verbose': true,
   };
-  test('json', () => {
-    const file2 = path.resolve(process.cwd(), '__fixtures__', 'file2.json');
-    const result = genDiff(file1, file2);
+  const testF = (file) => {
+    const result = genDiff(file1, file);
     expect(result).toEqual(need);
     expect(result).not.toEqual({});
+  };
+  test('json', () => {
+    const file2 = path.resolve(process.cwd(), '__fixtures__', 'file2.json');
+    testF(file2);
   });
   test('yaml', () => {
     const file2 = path.resolve(process.cwd(), '__fixtures__', 'file2.yml');
-    const result = genDiff(file1, file2);
-    expect(result).toEqual(need);
-    expect(result).not.toEqual({});
+    testF(file2);
   });
 });
