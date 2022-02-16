@@ -18,22 +18,22 @@ describe('test gendiff', () => {
   test('json', () => {
     const file1 = getFilePath('file1.json');
     const file2 = getFilePath('file2.json');
-    const result = genDiff(file1, file2);
-    expect(result).toEqual(need);
-    expect(result).not.toEqual({});
+    expect(genDiff(file1, file2)).toEqual(need);
   });
   test('yaml', () => {
     const file1 = getFilePath('file1.yaml');
     const file2 = getFilePath('file2.yml');
-    const result = genDiff(file1, file2);
-    expect(result).toEqual(need);
-    expect(result).not.toEqual({});
+    expect(genDiff(file1, file2)).toEqual(need);
   });
   test('tmp', () => {
-    const file1 = getFilePath('file1.yaml');
+    const file1 = getFilePath('file1.json');
     const file2 = getFilePath('file2.tmp');
-    const result = genDiff(file1, file2);
-    expect(result).not.toEqual(need);
+    expect(genDiff(file1, file2)).toEqual({
+      '- follow': false,
+      '- host': 'hexlet.io',
+      '- proxy': '123.234.53.22',
+      '- timeout': 50,
+    });
   });
   test('empty ext', () => {
     const file1 = getFilePath('file');
