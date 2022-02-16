@@ -27,7 +27,14 @@ describe('test gendiff', () => {
     const file2 = getFilePath('file2.yml');
     testF(file2);
   });
+  test('tmp', () => {
+    const file2 = getFilePath('file2.tmp');
+    const result = genDiff(file1, file2);
+    expect(result).not.toEqual(need);
+  });
   test('fake', () => {
-    expect(getFileData(getFilePath('./fake.json'))).toEqual({});
+    expect(() => {
+      getFileData(getFilePath('./fake.tmp'));
+    }).toThrow();
   });
 });
