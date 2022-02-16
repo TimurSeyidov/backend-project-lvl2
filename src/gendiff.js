@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import fs from 'fs';
-import yaml from 'js-yaml';
 import path from 'path';
+import parsers from './parsers.js';
 
 const getFileData = (file) => {
   const filename = path.normalize(file);
@@ -10,19 +10,7 @@ const getFileData = (file) => {
     encoding: 'utf8',
     flag: 'r',
   });
-  switch (ext) {
-    case '.json':
-      return JSON.parse(content);
-    case '.yml':
-      return _.flattenDeep(yaml.load(content)).reduce((prev, curr) => {
-        _.forIn(curr, (value, key) => (
-          _.set(prev, key, value)
-        ));
-        return prev;
-      }, {});
-    default:
-      return {};
-  }
+  return parsers(content, ext.substring(1) || '');
 };
 
 const genDiff = (filepath1, filepath2) => {

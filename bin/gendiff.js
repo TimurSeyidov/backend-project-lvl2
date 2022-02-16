@@ -14,6 +14,7 @@ program
     const data = genDiff(filename1, filename2);
     const { format } = program.opts();
     switch (format) {
+      case 'yaml':
       case 'yml':
         _.forIn(data, (value, key) => (
           console.log(`${key}: ${value}`)
@@ -27,5 +28,5 @@ program
         console.log('}');
     }
   })
-  .option('-f, --format <type>', 'output format');
+  .option('-f, --format <type>', 'output format (support json | yaml)');
 program.parse(process.argv);
