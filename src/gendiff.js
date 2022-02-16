@@ -3,33 +3,34 @@ import fs from 'fs';
 import yaml from 'js-yaml';
 import path from 'path';
 
+const getFileData = (file) => {
+  const filename = path.normalize(file);
+  const ext = path.extname(filename);
+  try {
+    const content = fs.readFileSync(filename, {
+      encoding: 'utf8',
+      flag: 'r',
+    });
+    switch (ext) {
+      case '.json':
+        return JSON.parse(content);
+      case '.yml':
+        return _.flattenDeep(yaml.load(content)).reduce((prev, curr) => {
+          _.forIn(curr, (value, key) => (
+            _.set(prev, key, value)
+          ));
+          return prev;
+        }, {});
+      default:
+        return {};
+    }
+  } catch (e) {
+    return {};
+  }
+};
+
 const genDiff = (filepath1, filepath2) => {
   const output = {};
-  const getFileData = (file) => {
-    const filename = path.normalize(file);
-    const ext = path.extname(filename);
-    try {
-      const content = fs.readFileSync(filename, {
-        encoding: 'utf8',
-        flag: 'r',
-      });
-      switch (ext) {
-        case '.json':
-          return JSON.parse(content);
-        case '.yml':
-          return _.flattenDeep(yaml.load(content)).reduce((prev, curr) => {
-            _.forIn(curr, (value, key) => (
-              _.set(prev, key, value)
-            ));
-            return prev;
-          }, {});
-        default:
-          return {};
-      }
-    } catch (e) {
-      return {};
-    }
-  };
   try {
     const data1 = getFileData(filepath1);
     const data2 = getFileData(filepath2);
