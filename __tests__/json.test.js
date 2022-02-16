@@ -16,14 +16,12 @@ describe('test gendiff', () => {
 
   const getFilePath = (filename) => path.resolve(process.cwd(), '__fixtures__', filename);
   test('json', () => {
-    const file1 = getFilePath('file1.json');
-    const file2 = getFilePath('file2.json');
-    expect(genDiff(file1, file2)).toEqual(need);
+    expect(genDiff(getFilePath('file1.json'), getFilePath('file2.json')))
+      .toEqual(need);
   });
   test('yaml', () => {
-    const file1 = getFilePath('file1.yaml');
-    const file2 = getFilePath('file2.yml');
-    expect(genDiff(file1, file2)).toEqual(need);
+    expect(genDiff(getFilePath('file1.yaml'), getFilePath('file2.yml')))
+      .toEqual(need);
   });
   test('tmp', () => {
     const file1 = getFilePath('file1.json');
