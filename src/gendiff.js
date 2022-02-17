@@ -70,4 +70,4 @@ const genDiff = (filepath1, filepath2) => {
   return analyze(data1, data2);
 };
 
-export { genDiff, getFileData, analyze};
+export { genDiff, getFileData, analyze };
