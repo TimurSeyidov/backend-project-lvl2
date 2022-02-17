@@ -1,7 +1,7 @@
 import { describe, test, expect } from '@jest/globals';
 import path from 'path';
 import fs from 'fs';
-import { genDiff, getFileData, analyze} from '../src/gendiff.js';
+import { genDiff, getFileData, analyze } from '../src/gendiff.js';
 import parsers from '../src/parsers.js';
 import formatter from '../src/formatter.js';
 
@@ -297,7 +297,7 @@ describe('test gendiff', () => {
     });
     expect(parsers(content)).toEqual(parsers(need));
   });
-  test('analyze', ()=>{
+  test('analyze', () => {
     const exp1 = { test1: 1 };
     const exp2 = { test1: { test2: 2 } };
     const result = [
