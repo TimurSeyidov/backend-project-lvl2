@@ -22,11 +22,7 @@ make test
 ```sh
 gendiff file1.json file2.json
 ```
-
-Формат вывода
-```sh
-gendiff file1.json file2.json -f yaml
-```
+[![asciicast](https://asciinema.org/a/OuBMeyyFKRdvWKIpX54VGJ1hy.png)](https://asciinema.org/a/OuBMeyyFKRdvWKIpX54VGJ1hy)
 
 Помощь
 ```sh
