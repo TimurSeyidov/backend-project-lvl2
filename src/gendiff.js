@@ -20,10 +20,10 @@ const analyze = (obj1 = {}, obj2 = {}) => {
     const data1 = _.get(obj1, key);
     const data2 = _.get(obj2, key);
     let ins = [];
-    if (_.isUndefined(data2)) {
-      ins = [{ key, prefix: '-', value: !_.isObject(data1) ? data1.toString() : analyze(data1, data1) }];
-    } else if (_.isUndefined(data1)) {
-      ins = [{ key, prefix: '+', value: !_.isObject(data2) ? data2.toString() : analyze(data2, data2) }];
+    if ([data1, data2].filter(_.isUndefined).length) {
+      const prefix = _.isUndefined(data2) ? '-' : '+';
+      const check = _.isUndefined(data2) ? data1 : data2;
+      ins = [{ key, prefix, value: !_.isObject(check) ? check.toString() : analyze(check, check) }];
     } else if (_.isObject(data1) && _.isObject(data2)) {
       ins = [{ key, prefix: ' ', value: analyze(data1, data2) }];
     } else if (data1 === data2) {
