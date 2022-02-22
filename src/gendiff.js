@@ -21,20 +21,18 @@ const analyze = (obj1 = {}, obj2 = {}) => {
     const data2 = _.get(obj2, key);
     if (_.isUndefined(data2)) {
       const value = !_.isObject(data1) ? data1.toString() : analyze(data1, data1);
-      return lines.push({ prefix: '-', key, value });
+      lines.push({ prefix: '-', key, value });
+    } else if (_.isUndefined(data1)) {
+      const value = !_.isObject(data2) ? data2.toString() : analyze(data2, data2);
+      lines.push({ prefix: '+', key, value });
+    } else if (_.isObject(data1) && _.isObject(data2)) {
+      lines.push({ prefix: ' ', key, value: analyze(data1, data2) });
+    } else if (data1 === data2) {
+      lines.push({ prefix: ' ', key, value: data1 });
+    } else {
+      lines.push({ prefix: '-', key, value: _.isObject(data1) ? analyze(data1, data1) : data1 });
+      lines.push({ prefix: '+', key, value: _.isObject(data2) ? analyze(data2, data2) : data2 });
     }
-    if (_.isUndefined(data1)) {
-      const value = !_.isObject(data2) ? data2 : analyze(data2, data2);
-      return lines.push({ prefix: '+', key, value });
-    }
-    if (_.isObject(data1) && _.isObject(data2)) {
-      return lines.push({ prefix: ' ', key, value: analyze(data1, data2) });
-    }
-    if (data1 === data2) {
-      return lines.push({ prefix: ' ', key, value: data1 });
-    }
-    lines.push({ prefix: '-', key, value: _.isObject(data1) ? analyze(data1, data1) : data1 });
-    return lines.push({ prefix: '+', key, value: _.isObject(data2) ? analyze(data2, data2) : data2 });
   });
   return lines;
 };

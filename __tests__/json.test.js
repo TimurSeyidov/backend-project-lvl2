@@ -6,6 +6,7 @@ import parsers from '../src/parsers.js';
 import formatter from '../src/formatter.js';
 
 describe('test gendiff', () => {
+  const fileTmp = './__fixtures__/tmp.json';
   const need = [
     {
       prefix: ' ',
@@ -14,7 +15,7 @@ describe('test gendiff', () => {
         {
           prefix: '+',
           key: 'follow',
-          value: false,
+          value: 'false',
         },
         {
           prefix: ' ',
@@ -174,101 +175,6 @@ describe('test gendiff', () => {
       ],
     },
   ];
-  const tmpResult = [
-    {
-      prefix: '-',
-      key: 'common',
-      value: [
-        {
-          prefix: ' ',
-          key: 'setting1',
-          value: 'Value 1',
-        },
-        {
-          prefix: ' ',
-          key: 'setting2',
-          value: 200,
-        },
-        {
-          prefix: ' ',
-          key: 'setting3',
-          value: true,
-        },
-        {
-          prefix: ' ',
-          key: 'setting6',
-          value: [
-            {
-              prefix: ' ',
-              key: 'doge',
-              value: [
-                {
-                  prefix: ' ',
-                  key: 'wow',
-                  value: '',
-                },
-              ],
-            },
-            {
-              prefix: ' ',
-              key: 'key',
-              value: 'value',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      prefix: '-',
-      key: 'group1',
-      value: [
-        {
-          prefix: ' ',
-          key: 'baz',
-          value: 'bas',
-        },
-        {
-          prefix: ' ',
-          key: 'foo',
-          value: 'bar',
-        },
-        {
-          prefix: ' ',
-          key: 'nest',
-          value: [
-            {
-              prefix: ' ',
-              key: 'key',
-              value: 'value',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      prefix: '-',
-      key: 'group2',
-      value: [
-        {
-          prefix: ' ',
-          key: 'abc',
-          value: 12345,
-        },
-        {
-          prefix: ' ',
-          key: 'deep',
-          value: [
-            {
-              prefix: ' ',
-              key: 'id',
-              value: 45,
-            },
-          ],
-        },
-      ],
-    },
-  ];
-
   const getFilePath = (filename) => path.resolve(process.cwd(), '__fixtures__', filename);
   test('json', () => {
     expect(genDiff(getFilePath('file1.json'), getFilePath('file2.json')))
@@ -279,9 +185,33 @@ describe('test gendiff', () => {
       .toEqual(need);
   });
   test('tmp', () => {
-    const file1 = getFilePath('file1.json');
+    const json = {
+      result: 1,
+      tmp: {
+        result: 2,
+      },
+    };
+    fs.writeFileSync(fileTmp, JSON.stringify(json));
+    const tmp = [
+      {
+        prefix: '-',
+        key: 'result',
+        value: '1',
+      },
+      {
+        prefix: '-',
+        key: 'tmp',
+        value: [
+          {
+            prefix: ' ',
+            key: 'result',
+            value: 2,
+          },
+        ],
+      },
+    ];
     const file2 = getFilePath('file2.tmp');
-    expect(genDiff(file1, file2)).toEqual(tmpResult);
+    expect(genDiff(fileTmp, file2)).toEqual(tmp);
   });
   test('empty ext', () => {
     const file1 = getFilePath('file');
@@ -347,5 +277,8 @@ describe('test gendiff', () => {
     const json = ['{', '    test: 1', '    test2: {', '      + test3: 1', '    }', '}'].join('\n');
     expect(formatter(data)).toBe(json);
     expect(formatter(data, 'plain')).toBe('');
+    if (fs.existsSync(fileTmp)) {
+      // fs.unlinkSync(fileTmp);
+    }
   });
 });
