@@ -174,7 +174,7 @@ describe('test gendiff', () => {
       ],
     },
   ];
-  const tmp_result = [
+  const tmpResult = [
     {
       prefix: '-',
       key: 'common',
@@ -281,7 +281,7 @@ describe('test gendiff', () => {
   test('tmp', () => {
     const file1 = getFilePath('file1.json');
     const file2 = getFilePath('file2.tmp');
-    expect(genDiff(file1, file2)).toEqual(tmp_result);
+    expect(genDiff(file1, file2)).toEqual(tmpResult);
   });
   test('empty ext', () => {
     const file1 = getFilePath('file');
