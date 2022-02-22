@@ -19,23 +19,18 @@ const analyze = (obj1 = {}, obj2 = {}) => {
   keys.forEach((key) => {
     const data1 = _.get(obj1, key);
     const data2 = _.get(obj2, key);
-    let value;
-    let prefix = false;
+    let ins = {};
     if (_.isUndefined(data2)) {
-      value = !_.isObject(data1) ? data1.toString() : analyze(data1, data1);
-      prefix = '-';
+      ins = { prefix: '-', value: !_.isObject(data1) ? data1.toString() : analyze(data1, data1) };
     } else if (_.isUndefined(data1)) {
-      value = !_.isObject(data2) ? data2.toString() : analyze(data2, data2);
-      prefix = '+';
+      ins = { prefix: '+', value: !_.isObject(data2) ? data2.toString() : analyze(data2, data2) };
     } else if (_.isObject(data1) && _.isObject(data2)) {
-      prefix = ' ';
-      value = analyze(data1, data2);
+      ins = { prefix: ' ', value: analyze(data1, data2) };
     } else if (data1 === data2) {
-      prefix = ' ';
-      value = data1;
+      ins = { prefix: ' ', value: data1 };
     }
-    if (prefix !== false) {
-      lines.push({ prefix, key, value });
+    if (Object.keys(ins).length) {
+      lines.push(Object.assign(ins, { key }));
     } else {
       lines.push({ prefix: '-', key, value: _.isObject(data1) ? analyze(data1, data1) : data1 });
       lines.push({ prefix: '+', key, value: _.isObject(data2) ? analyze(data2, data2) : data2 });
