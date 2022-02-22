@@ -174,6 +174,100 @@ describe('test gendiff', () => {
       ],
     },
   ];
+  const tmp_result = [
+    {
+      prefix: '-',
+      key: 'common',
+      value: [
+        {
+          prefix: ' ',
+          key: 'setting1',
+          value: 'Value 1',
+        },
+        {
+          prefix: ' ',
+          key: 'setting2',
+          value: 200,
+        },
+        {
+          prefix: ' ',
+          key: 'setting3',
+          value: true,
+        },
+        {
+          prefix: ' ',
+          key: 'setting6',
+          value: [
+            {
+              prefix: ' ',
+              key: 'doge',
+              value: [
+                {
+                  prefix: ' ',
+                  key: 'wow',
+                  value: '',
+                },
+              ],
+            },
+            {
+              prefix: ' ',
+              key: 'key',
+              value: 'value',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      prefix: '-',
+      key: 'group1',
+      value: [
+        {
+          prefix: ' ',
+          key: 'baz',
+          value: 'bas',
+        },
+        {
+          prefix: ' ',
+          key: 'foo',
+          value: 'bar',
+        },
+        {
+          prefix: ' ',
+          key: 'nest',
+          value: [
+            {
+              prefix: ' ',
+              key: 'key',
+              value: 'value',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      prefix: '-',
+      key: 'group2',
+      value: [
+        {
+          prefix: ' ',
+          key: 'abc',
+          value: 12345,
+        },
+        {
+          prefix: ' ',
+          key: 'deep',
+          value: [
+            {
+              prefix: ' ',
+              key: 'id',
+              value: 45,
+            },
+          ],
+        },
+      ],
+    },
+  ];
 
   const getFilePath = (filename) => path.resolve(process.cwd(), '__fixtures__', filename);
   test('json', () => {
@@ -185,103 +279,9 @@ describe('test gendiff', () => {
       .toEqual(need);
   });
   test('tmp', () => {
-    const result = [
-      {
-        prefix: '-',
-        key: 'common',
-        value: [
-          {
-            prefix: ' ',
-            key: 'setting1',
-            value: 'Value 1',
-          },
-          {
-            prefix: ' ',
-            key: 'setting2',
-            value: 200,
-          },
-          {
-            prefix: ' ',
-            key: 'setting3',
-            value: true,
-          },
-          {
-            prefix: ' ',
-            key: 'setting6',
-            value: [
-              {
-                prefix: ' ',
-                key: 'doge',
-                value: [
-                  {
-                    prefix: ' ',
-                    key: 'wow',
-                    value: '',
-                  },
-                ],
-              },
-              {
-                prefix: ' ',
-                key: 'key',
-                value: 'value',
-              },
-            ],
-          },
-        ],
-      },
-      {
-        prefix: '-',
-        key: 'group1',
-        value: [
-          {
-            prefix: ' ',
-            key: 'baz',
-            value: 'bas',
-          },
-          {
-            prefix: ' ',
-            key: 'foo',
-            value: 'bar',
-          },
-          {
-            prefix: ' ',
-            key: 'nest',
-            value: [
-              {
-                prefix: ' ',
-                key: 'key',
-                value: 'value',
-              },
-            ],
-          },
-        ],
-      },
-      {
-        prefix: '-',
-        key: 'group2',
-        value: [
-          {
-            prefix: ' ',
-            key: 'abc',
-            value: 12345,
-          },
-          {
-            prefix: ' ',
-            key: 'deep',
-            value: [
-              {
-                prefix: ' ',
-                key: 'id',
-                value: 45,
-              },
-            ],
-          },
-        ],
-      },
-    ];
     const file1 = getFilePath('file1.json');
     const file2 = getFilePath('file2.tmp');
-    expect(genDiff(file1, file2)).toEqual(result);
+    expect(genDiff(file1, file2)).toEqual(tmp_result);
   });
   test('empty ext', () => {
     const file1 = getFilePath('file');
