@@ -6,234 +6,68 @@ import parsers from '../src/parsers.js';
 import formatter from '../src/formatter.js';
 
 describe('test gendiff', () => {
-  const fileTmp = './__fixtures__/tmp.json';
-  const need = [
-    {
-      prefix: ' ',
-      key: 'common',
-      value: [
-        {
-          prefix: '+',
-          key: 'follow',
-          value: 'false',
-        },
-        {
-          prefix: ' ',
-          key: 'setting1',
-          value: 'Value 1',
-        },
-        {
-          prefix: '-',
-          key: 'setting2',
-          value: '200',
-        },
-        {
-          prefix: '-',
-          key: 'setting3',
-          value: true,
-        },
-        {
-          prefix: '+',
-          key: 'setting3',
-          value: null,
-        },
-        {
-          prefix: '+',
-          key: 'setting4',
-          value: 'blah blah',
-        },
-        {
-          prefix: '+',
-          key: 'setting5',
-          value: [
-            {
-              prefix: ' ',
-              key: 'key5',
-              value: 'value5',
-            },
-          ],
-        },
-        {
-          prefix: ' ',
-          key: 'setting6',
-          value: [
-            {
-              prefix: ' ',
-              key: 'doge',
-              value: [
-                {
-                  prefix: '-',
-                  key: 'wow',
-                  value: '',
-                },
-                {
-                  prefix: '+',
-                  key: 'wow',
-                  value: 'so much',
-                },
-              ],
-            },
-            {
-              prefix: ' ',
-              key: 'key',
-              value: 'value',
-            },
-            {
-              prefix: '+',
-              key: 'ops',
-              value: 'vops',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      prefix: ' ',
-      key: 'group1',
-      value: [
-        {
-          prefix: '-',
-          key: 'baz',
-          value: 'bas',
-        },
-        {
-          prefix: '+',
-          key: 'baz',
-          value: 'bars',
-        },
-        {
-          prefix: ' ',
-          key: 'foo',
-          value: 'bar',
-        },
-        {
-          prefix: '-',
-          key: 'nest',
-          value: [
-            {
-              prefix: ' ',
-              key: 'key',
-              value: 'value',
-            },
-          ],
-        },
-        {
-          prefix: '+',
-          key: 'nest',
-          value: 'str',
-        },
-      ],
-    },
-    {
-      prefix: '-',
-      key: 'group2',
-      value: [
-        {
-          prefix: ' ',
-          key: 'abc',
-          value: 12345,
-        },
-        {
-          prefix: ' ',
-          key: 'deep',
-          value: [
-            {
-              prefix: ' ',
-              key: 'id',
-              value: 45,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      prefix: '+',
-      key: 'group3',
-      value: [
-        {
-          prefix: ' ',
-          key: 'deep',
-          value: [
-            {
-              prefix: ' ',
-              key: 'id',
-              value: [
-                {
-                  prefix: ' ',
-                  key: 'number',
-                  value: 45,
-                },
-              ],
-            },
-          ],
-        },
-        {
-          prefix: ' ',
-          key: 'fee',
-          value: 100500,
-        },
-      ],
-    },
-  ];
   const getFilePath = (filename) => path.resolve(process.cwd(), '__fixtures__', filename);
+  const need = [
+    { key: 'cache', prefix: '+', value: [{ key: 'time', prefix: ' ', value: '1' }] },
+    {
+      key: 'fix',
+      prefix: ' ',
+      value: [
+        { key: 'time', prefix: '-', value: '1' },
+        { key: 'time', prefix: '+', value: '2' },
+      ],
+    },
+    { key: 'result', prefix: '-', value: '1' },
+    { key: 'result', prefix: '+', value: [{ key: 'tmp', prefix: ' ', value: '2' }] },
+    { key: 'tresult', prefix: '-', value: [{ key: 'tmp', prefix: ' ', value: '2' }] },
+    { key: 'tresult', prefix: '+', value: '1' },
+    { key: 'value', prefix: '-', value: '2' },
+    { key: 'value', prefix: '+', value: 'Hello' },
+    { key: 'zend', prefix: '+', value: '1' },
+  ];
+  const needTmp1 = [
+    { prefix: '-', key: 'fix', value: [{ prefix: ' ', key: 'time', value: '1' }] },
+    { prefix: '-', key: 'result', value: '1' },
+    { prefix: '-', key: 'tresult', value: [{ prefix: ' ', key: 'tmp', value: '2' }] },
+    { prefix: '-', key: 'value', value: '2' },
+  ];
   test('json', () => {
-    expect(genDiff(getFilePath('file1.json'), getFilePath('file2.json')))
-      .toEqual(need);
+    expect(genDiff(getFilePath('tmp1.json'), getFilePath('tmp2.json'))).toEqual(need);
   });
   test('yaml', () => {
-    expect(genDiff(getFilePath('file1.yaml'), getFilePath('file2.yml')))
-      .toEqual(need);
+    expect(genDiff(getFilePath('tmp1.yml'), getFilePath('tmp2.yml'))).toEqual(need);
   });
   test('tmp', () => {
-    const json = {
-      result: 1,
-      tmp: {
-        result: 2,
-      },
-    };
-    fs.writeFileSync(fileTmp, JSON.stringify(json));
-    const tmp = [
-      {
-        prefix: '-',
-        key: 'result',
-        value: '1',
-      },
-      {
-        prefix: '-',
-        key: 'tmp',
-        value: [
-          {
-            prefix: ' ',
-            key: 'result',
-            value: 2,
-          },
-        ],
-      },
-    ];
-    const file2 = getFilePath('file2.tmp');
-    expect(genDiff(fileTmp, file2)).toEqual(tmp);
+    expect(genDiff(getFilePath('tmp1.json'), getFilePath('file2.tmp'))).toEqual(needTmp1);
   });
   test('empty ext', () => {
-    const file1 = getFilePath('file');
-    const file2 = getFilePath('file2.tmp');
+    const file1 = getFilePath('tmp1.json');
+    const file2 = getFilePath('file');
     const result = genDiff(file1, file2);
-    expect(result).not.toEqual(need);
+    expect(result).toEqual(needTmp1);
   });
   test('parser', () => {
-    const file = getFilePath('file1.json');
+    const file = getFilePath('tmp1.json');
     const content = fs.readFileSync(file, {
       encoding: 'utf8',
       flag: 'r',
     });
-    expect(parsers(content)).toEqual(parsers(need));
+    expect(parsers(content, 'json')).toEqual(parsers(JSON.stringify({
+      result: 1,
+      tresult: {
+        tmp: 2,
+      },
+      value: 2,
+      fix: { time: 1 },
+    }), 'json'));
   });
   test('analyze', () => {
-    const exp1 = { test1: 1 };
-    const exp2 = { test1: { test2: 2 } };
+    const exp1 = { test1: '1' };
+    const exp2 = { test1: { test2: '2' } };
     const result = [
       {
         key: 'test1',
-        value: 1,
+        value: '1',
         prefix: '-',
       },
       {
@@ -242,7 +76,7 @@ describe('test gendiff', () => {
         value: [
           {
             key: 'test2',
-            value: 2,
+            value: '2',
             prefix: ' ',
           },
         ],
@@ -260,7 +94,7 @@ describe('test gendiff', () => {
       {
         key: 'test',
         prefix: ' ',
-        value: 1,
+        value: '1',
       },
       {
         key: 'test2',
@@ -268,7 +102,7 @@ describe('test gendiff', () => {
         value: [
           {
             key: 'test3',
-            value: 1,
+            value: '1',
             prefix: '+',
           },
         ],
@@ -277,8 +111,5 @@ describe('test gendiff', () => {
     const json = ['{', '    test: 1', '    test2: {', '      + test3: 1', '    }', '}'].join('\n');
     expect(formatter(data)).toBe(json);
     expect(formatter(data, 'plain')).toBe('');
-    if (fs.existsSync(fileTmp)) {
-      // fs.unlinkSync(fileTmp);
-    }
   });
 });

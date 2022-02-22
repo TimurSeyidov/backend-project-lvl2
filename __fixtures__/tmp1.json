@@ -1,0 +1,10 @@
+{
+    "result": 1,
+    "tresult": {
+        "tmp": 2
+    },
+    "value": 2,
+    "fix": {
+        "time": 1
+    }
+}

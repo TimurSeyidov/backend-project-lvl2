@@ -27,11 +27,11 @@ const analyze = (obj1 = {}, obj2 = {}) => {
     } else if (_.isObject(data1) && _.isObject(data2)) {
       ins = [{ key, prefix: ' ', value: analyze(data1, data2) }];
     } else if (data1 === data2) {
-      ins = [{ key, prefix: ' ', value: data1 }];
+      ins = [{ key, prefix: ' ', value: data1.toString() }];
     } else {
       ins = [
-        { prefix: '-', key, value: _.isObject(data1) ? analyze(data1, data1) : data1 },
-        { prefix: '+', key, value: _.isObject(data2) ? analyze(data2, data2) : data2 },
+        { prefix: '-', key, value: _.isObject(data1) ? analyze(data1, data1) : data1.toString() },
+        { prefix: '+', key, value: _.isObject(data2) ? analyze(data2, data2) : data2.toString() },
       ];
     }
     lines = [].concat(lines, ins);

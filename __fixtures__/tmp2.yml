@@ -1,0 +1,10 @@
+---
+result:
+  tmp: 2
+tresult: 1
+value: "Hello"
+cache:
+  time: 1
+fix:
+  time: 2
+zend: 1
