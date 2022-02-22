@@ -31,6 +31,24 @@ describe('test gendiff', () => {
     { prefix: '-', key: 'tresult', value: [{ prefix: ' ', key: 'tmp', value: '2' }] },
     { prefix: '-', key: 'value', value: '2' },
   ];
+  const anal = [
+    {
+      key: 'test1',
+      value: '1',
+      prefix: '-',
+    },
+    {
+      key: 'test1',
+      prefix: '+',
+      value: [
+        {
+          key: 'test2',
+          value: '2',
+          prefix: ' ',
+        },
+      ],
+    },
+  ];
   test('json', () => {
     expect(genDiff(getFilePath('tmp1.json'), getFilePath('tmp2.json'))).toEqual(need);
   });
@@ -64,25 +82,7 @@ describe('test gendiff', () => {
   test('analyze', () => {
     const exp1 = { test1: '1' };
     const exp2 = { test1: { test2: '2' } };
-    const result = [
-      {
-        key: 'test1',
-        value: '1',
-        prefix: '-',
-      },
-      {
-        key: 'test1',
-        prefix: '+',
-        value: [
-          {
-            key: 'test2',
-            value: '2',
-            prefix: ' ',
-          },
-        ],
-      },
-    ];
-    expect(analyze(exp1, exp2)).toEqual(result);
+    expect(analyze(exp1, exp2)).toEqual(anal);
   });
   test('fake', () => {
     expect(() => {
@@ -90,26 +90,15 @@ describe('test gendiff', () => {
     }).toThrow();
   });
   test('formatter', () => {
-    const data = [
-      {
-        key: 'test',
-        prefix: ' ',
-        value: '1',
-      },
-      {
-        key: 'test2',
-        prefix: ' ',
-        value: [
-          {
-            key: 'test3',
-            value: '1',
-            prefix: '+',
-          },
-        ],
-      },
-    ];
-    const json = ['{', '    test: 1', '    test2: {', '      + test3: 1', '    }', '}'].join('\n');
-    expect(formatter(data)).toBe(json);
-    expect(formatter(data, 'plain')).toBe('');
+    const result = [
+      '{',
+      '  - test1: 1',
+      '  + test1: {',
+      '        test2: 2',
+      '    }',
+      '}',
+    ].join('\n');
+    expect(formatter(anal)).toBe(result);
+    expect(formatter(anal, 'plain')).toBe('');
   });
 });
